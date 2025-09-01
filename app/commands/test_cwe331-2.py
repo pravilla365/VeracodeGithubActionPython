@@ -2,7 +2,9 @@ import random
 
 def generate_iv():
     # Vulnerable: using random.random() for IV generation
-    iv = int(random.random() * (2**64))  # Generates a 64-bit IV
+    import random
+    rand = random.SystemRandom()
+    iv = int(rand.random() * (2**64))  # Generates a 64-bit IV
     return iv
 
 # Example usage
