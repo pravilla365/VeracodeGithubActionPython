@@ -32,6 +32,11 @@ jobs:
           rm -rf verademo-python.zip
           zip -r verademo-python.zip .
 
+      - name: save artifact
+        uses: actions/upload-artifact@v4
+        with: 
+           name: scan-target
+           path: verademo-python.zip
                    
   pipeline_scan:
       needs: build
@@ -55,10 +60,6 @@ jobs:
             request_policy: "Veracode Recommended SCA Very Low"
             debug: 1
             fail_build: false
-        - uses: actions/upload-artifact@v4
-          with:
-            name: Veracode Pipeline-Scan Results
-            path: results.json 
 
   veracode-fix:
     runs-on: ubuntu-latest
