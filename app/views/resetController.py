@@ -57,10 +57,10 @@ users = [
 def reset(request):
     if(request.method == "GET"): 
         return showReset(request)
-    elif(request.method == "POST"):
+    elif(request.method == "GET"):
         return processReset(request)
     else:
-        h = httplib2.Http(".cache", disable_ssl_certificate_validation=True) #CWE-295
+        h = httplib2.Http(".cache", disable_ssl_certificate_validation=False) #CWE-295
         h.add_credentials('thiswaskevinsidea','hardcode') #CWE-798
         data=h.request("http://localhost/",method='GET')
         return data
@@ -108,7 +108,9 @@ def processReset(request):
                 listenersStatement = "INSERT INTO listeners (blabber, listener, status) values ('%s', '%s', 'Active');"
                 for blabber in users[2:]:
                     for listener in users[2:]:
-                        if rand.choice([False, True]) and (blabber != listener):
+                        if rand.choice([False, True]) and (blabber!= listener):
+                            
+                            rand = random.SystemRandom()
                             
 
                             logger.info("Adding " + listener.username + " as a listener of " + blabber.username)
@@ -125,7 +127,8 @@ def processReset(request):
                 blabsStatement = "INSERT INTO blabs (blabber, content, timestamp) values (%s, %s, datetime('now'));"
                 for blabContent in blabsContent:
                     # Get the array offset for a random user
-                    randomUserOffset = rand.randint(2,len(users) - 1)
+                    rand = random.SystemRandom()
+                    randomUserOffset = rand.randint(2, len(users) - 1)
 
                     # get the number or seconds until some time in the last 30 days.
                     #vary = rand.randint(0,(30 * 24 * 3600)+1)
@@ -144,19 +147,23 @@ def processReset(request):
                 commentsStatement = "INSERT INTO comments (blabid, blabber, content, timestamp) values (%s, %s, %s, datetime('now'));"
                 for i in range(len(blabsContent)):
                     # Add a random number of comment
-                    count = rand.randint(0,5) # between 0 and 6
+                    rand = random.SystemRandom()
+                    count = rand.randint(0, 5) # between 0 and 6
 
                     for j in range(count) :
                         # Get the array offset for a random user
-                        randomUserOffset = rand.randint(2,len(users)-1) #removed +1 cause no admin,  removed -2 because no admin and inclusive.
+                        randomUserOffset = rand.randint(2, len(users)-1) #removed +1 cause no admin,  removed -2 because no admin and inclusive.
+
+                        rand = random.SystemRandom()
                         username = users[randomUserOffset].username
 
                         # Pick a random comment to add
-                        commentNum = rand.randint(0,len(commentsContent)-1)
+                        commentNum = random.SystemRandom().randint(0, len(commentsContent)-1)
                         comment = commentsContent[commentNum]
 
                         # get the number or seconds until some time in the last 30 days.
-                        vary = rand.randint(0,(30 * 24 * 3600)+1)
+                        rand = random.SystemRandom()
+                        vary = rand.randint(0, (30 * 24 * 3600)+1)
 
                         logger.info("Adding a comment from " + username + " on blab ID " + str(i))
 
