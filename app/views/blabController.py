@@ -48,7 +48,7 @@ def feed(request):
 
                 logger.info("Executing query to get all 'Blabs for me'")
                 blabsForMe = sqlBlabsForMe.format(10, 0)
-                cursor.execute(blabsForMe % (username,))
+                cursor.execute(blabsForMe, (username, ))
                 blabsForMeResults = cursor.fetchall()
 
                 feedBlabs = []
@@ -159,7 +159,7 @@ def morefeed(request):
 
             logger.info("Executing query to see more Blabs")
             blabsForMe = sqlBlabsForMe.format(len, cnt)
-            cursor.execute(blabsForMe % (username,))
+            cursor.execute(blabsForMe, (username, ))
             results = cursor.fetchall()
             ret = ""
             for blab in results:
@@ -170,7 +170,7 @@ def morefeed(request):
     except Exception as e:
         logger.error("Unexpected error", e)
 
-    return HttpResponse(ret)
+    return escape(HttpResponse(ret))
     
 # Brings up the page to view a blab, or to write a blab
 def blab(request):
@@ -198,7 +198,7 @@ def blab(request):
             with connection.cursor() as cursor:
 
                 logger.info("Executing query to see Blab details")
-                cursor.execute(blabDetailsSql % (blabid,))
+                cursor.execute(blabDetailsSql, (blabid, ))
                 blabDetailsResults = cursor.fetchone()
 
                 if (blabDetailsResults):
@@ -208,7 +208,7 @@ def blab(request):
 
                     # Get comments
                     logger.info("Executing query to get all comments")
-                    cursor.execute(blabCommentsSql % (blabid,))
+                    cursor.execute(blabCommentsSql, (blabid, ))
                     blabCommentsResults = cursor.fetchall()
 
                     comments = []
@@ -254,7 +254,7 @@ def blab(request):
             with connection.cursor() as cursor:
 
                 logger.info("Executing addComment")
-                cursor.execute(addCommentSql % (blabid, username, comment, moment.now().format("YYYY-MM-DD hh:mm:ss")))
+                cursor.execute(addCommentSql % (blabid, username, comment, moment.now().format("YYYY-MM-DD hh:mm:ss")), (username,))
                 
                 if not cursor.rowcount:
                     request.error = "Failed to add comment"
@@ -297,7 +297,7 @@ def blabbers(request):
 
                 logger.info(blabbersSql)
                 logger.info("Executing query to see Blab details")
-                cursor.execute(blabbersSql % (username, username))
+                cursor.execute(blabbersSql, (username, username))
                 blabbersResults = cursor.fetchall()
 
                 blabbers = []
