@@ -32,11 +32,6 @@ jobs:
           rm -rf verademo-python.zip
           zip -r verademo-python.zip .
 
-      - name: save artifact
-        uses: actions/upload-artifact@v4
-        with: 
-           name: scan-target
-           path: verademo-python.zip
                    
   pipeline_scan:
       needs: build
