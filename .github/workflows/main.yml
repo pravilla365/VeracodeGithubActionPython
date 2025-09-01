@@ -33,7 +33,7 @@ jobs:
           zip -r verademo-python.zip .
 
       - name: save artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with: 
            name: scan-target
            path: verademo-python.zip
@@ -47,7 +47,7 @@ jobs:
           uses: actions/checkout@v3
 
         - name: get archive
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: scan-target
         - name: pipeline-scan action step
@@ -60,10 +60,6 @@ jobs:
             request_policy: "Veracode Recommended SCA Very Low"
             debug: 1
             fail_build: false
-        - uses: actions/upload-artifact@v4
-          with:
-            name: Veracode Pipeline-Scan Results
-            path: results.json 
 
   veracode-fix:
     runs-on: ubuntu-latest
@@ -81,14 +77,14 @@ jobs:
           
       - name: Create fixes from static findings
         id: convert
-        uses: Veracode/veracode-fix@app-foldername-change
+        uses: Veracode/veracode-fix@v1.0.4
         with:
           inputFile: results.json
           vid: ${{ secrets.VID }}
           vkey: ${{ secrets.VKEY }}
           language: python
-          cwe: '331,80'
           createPR: true
           DEBUG: true
           fixType: batch
           files: all
+          emailForCommits: pravilla@veracode.com
