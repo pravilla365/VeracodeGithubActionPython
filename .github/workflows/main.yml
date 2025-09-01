@@ -33,7 +33,7 @@ jobs:
           zip -r verademo-python.zip .
 
       - name: save artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with: 
            name: scan-target
            path: verademo-python.zip
